@@ -91,10 +91,15 @@
       <h3>EXPIRYFY</h3>
     </div>
     <a href="#" class="active"><i class="bi bi-speedometer2 text-primary"></i> Dashboard</a>
-    <a href="#"><i class="bi bi-plus-circle-fill text-success"></i> Product Add</a>
-    <a href="#"><i class="bi bi-pencil-square text-warning"></i> Product Update</a>
-    <a href="#"><i class="bi bi-trash-fill text-danger"></i> Product Delete</a>
-    <a href="#"><i class="bi bi-eye-fill text-info"></i> Product View</a>
+    <a href="{% url 'add' %}"><i class="bi bi-plus-circle-fill text-success"></i> Product Add</a>
+    {% for product in products %}
+    <a href="{% url 'update' pk=product.pk %}"><i class="bi bi-pencil-square text-warning"></i> Product Update</a>
+{% endfor %}
+      {% for product in products %}
+    <a href="{% url 'delete' pk=product.pk %}"><i class="bi bi-trash-fill text-danger"></i> Product Update</a>
+{% endfor %}
+    
+    <a href="{% url 'view' %}"><i class="bi bi-eye-fill text-info"></i> Product View</a>
     <a href="#"><i class="bi bi-receipt-cutoff text-purple"></i> Customer Bill Entry</a>
     <a href="#"><i class="bi bi-grid-fill text-success"></i> Rack Add</a>
     <a href="#"><i class="bi bi-arrow-repeat text-warning"></i> Rack Update</a>
