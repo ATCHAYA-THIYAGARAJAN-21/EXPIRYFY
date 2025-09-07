@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>View Products</h2>
+  
+  <!-- Search Form -->
+  <form method="get" class="mb-3 d-flex">
+    <input type="text" name="rack_no" class="form-control me-2" placeholder="Enter Rack No">
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  {% if products %}
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Rack No</th>
+          <th>Batch No</th>
+          <th>Product Name</th>
+          <th>Manufacturing Date</th>
+          <th>Expiry Date</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Image</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td>{{ product.rack_no }}</td>
+          <td>{{ product.batch_no }}</td>
+          <td>{{ product.product_name }}</td>
+          <td>{{ product.manufacturing_date }}</td>
+          <td>{{ product.expiry_date }}</td>
+          <td>{{ product.quantity }}</td>
+          <td>{{ product.price }}</td>
+          <td>
+            {% if product.image %}
+              <img src="{{ product.image.url }}" width="60">
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'update' product.pk %}" class="btn btn-sm btn-warning">Update</a>
+            <a href="{% url 'delete' product.pk %}" class="btn btn-sm btn-danger">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% elif request.GET.rack_no %}
+    <p class="text-danger">No products found for Rack No: {{ request.GET.rack_no }}</p>
+  {% endif %}
+</div>
+{% endblock %}
