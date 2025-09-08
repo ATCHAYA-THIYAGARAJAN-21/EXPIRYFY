@@ -1,31 +1,194 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Rack List</h2>
-<table border="1" cellpadding="10">
-    <tr>
-        <th>Rack No</th>
-        <th>Product Name</th>
-        <th>Image</th>
-        <th>Actions</th>
-    </tr>
-    {% for rack in racks %}
-    <tr>
-        <td>{{ rack.rack_no }}</td>
-        <td>{{ rack.product_name }}</td>
-        <td>
-            {% if rack.product_image %}
-                <img src="{{ rack.product_image.url }}" width="100">
-            {% else %}
-                No Image
-            {% endif %}
-        </td>
-        <td>
-            <a href="{% url 'rack_update' rack.pk %}">Update</a> | 
-            <a href="{% url 'rack_delete' rack.pk %}">Delete</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-<br>
-<a href="{% url 'rack_add' %}">➕ Add New Rack</a>
+<style>
+/* -------------------- */
+/* Global Styling */
+/* -------------------- */
+body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #f0f4ff, #e6f7ff);
+    margin: 0;
+    padding: 0;
+}
+
+/* -------------------- */
+/* Wrapper */
+/* -------------------- */
+.list-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 90vh;
+    padding: 40px 20px;
+}
+
+/* -------------------- */
+/* Card */
+/* -------------------- */
+.list-card {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 900px;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Title */
+.list-card h2 {
+    text-align: center;
+    color: #17a2b8;
+    margin-bottom: 25px;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+/* -------------------- */
+/* Table Styling */
+/* -------------------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: center;
+    font-size: 15px;
+}
+
+table th {
+    background: #17a2b8;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+table tr:hover {
+    background: #eaf9ff;
+    transition: 0.3s;
+}
+
+/* Image */
+table img {
+    border-radius: 8px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+/* -------------------- */
+/* Action Buttons */
+/* -------------------- */
+.actions a {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    margin: 2px;
+    transition: all 0.3s ease;
+}
+
+/* Update */
+.actions a:first-child {
+    background: #007bff;
+    color: #fff;
+}
+.actions a:first-child:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,123,255,0.3);
+}
+
+/* Delete */
+.actions a:last-child {
+    background: #dc3545;
+    color: #fff;
+}
+.actions a:last-child:hover {
+    background: #b02a37;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(220,53,69,0.3);
+}
+
+/* -------------------- */
+/* Add New Rack Button */
+/* -------------------- */
+.add-btn {
+    display: inline-block;
+    padding: 12px 20px;
+    background: #28a745;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.add-btn:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40,167,69,0.4);
+}
+
+/* -------------------- */
+/* Responsive */
+/* -------------------- */
+@media (max-width: 768px) {
+    table th, table td {
+        font-size: 13px;
+        padding: 8px;
+    }
+    .list-card {
+        padding: 20px;
+    }
+    .list-card h2 {
+        font-size: 24px;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+<div class="list-wrapper">
+  <div class="list-card">
+    <h2>Rack List</h2>
+    <table>
+        <tr>
+            <th>Rack No</th>
+            <th>Product Name</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+        {% for rack in racks %}
+        <tr>
+            <td>{{ rack.rack_no }}</td>
+            <td>{{ rack.product_name }}</td>
+            <td>
+                {% if rack.product_image %}
+                    <img src="{{ rack.product_image.url }}" width="100">
+                {% else %}
+                    No Image
+                {% endif %}
+            </td>
+            <td class="actions">
+                <a href="{% url 'rack_update' rack.pk %}">Update</a>
+                <a href="{% url 'rack_delete' rack.pk %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'rack_add' %}" class="add-btn">➕ Add New Rack</a>
+  </div>
+</div>
 {% endblock %}
