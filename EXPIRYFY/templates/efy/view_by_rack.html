@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Search by Rack{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 70vh;">
+  
+  <!-- Search Form -->
+  <div style="width: 100%; max-width: 500px; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 30px;">
+    <h2 style="text-align: center; margin-bottom: 20px; color: #0d6efd;">🔍 Search Product by Rack</h2>
+    <form method="post" style="display: flex; gap: 10px; justify-content: center;">
+      {% csrf_token %}
+      <input type="text" name="rack_no" placeholder="Enter Rack Number" required
+             style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 8px;">
+      <button type="submit" style="background: #198754; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">
+        Search
+      </button>
+    </form>
+  </div>
+
+  <!-- Product Details -->
+  {% if product %}
+  <div style="width: 100%; max-width: 600px; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <h3 style="color: #0d6efd; margin-bottom: 15px;">📦 Product Details</h3>
+    <p><strong>Rack No:</strong> {{ product.rack_no }}</p>
+    <p><strong>Batch No:</strong> {{ product.batch_no }}</p>
+    <p><strong>Name:</strong> {{ product.product_name }}</p>
+    <p><strong>Manufacturing Date:</strong> {{ product.manufacturing_date }}</p>
+    <p><strong>Expiry Date:</strong> {{ product.expiry_date }}</p>
+    <p><strong>Quantity:</strong> {{ product.quantity }}</p>
+    <p><strong>Price:</strong> ₹{{ product.price }}</p>
+    <img src="{{ product.image.url }}" width="150" style="margin-top: 10px; border-radius: 8px;">
+  </div>
+  {% elif searched %}
+  <div style="width: 100%; max-width: 500px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center;">
+    <p style="color: #dc3545; font-weight: bold;">❌ No product found for this rack number.</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

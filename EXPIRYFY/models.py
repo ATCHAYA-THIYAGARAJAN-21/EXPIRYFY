@@ -1,10 +1,9 @@
 from django.db import models
 
-# Create your models here.
 from django.db import models
 
 class Product(models.Model):
-    rack_no = models.CharField(max_length=50)
+    rack_no = models.CharField(max_length=50, unique=True)
     batch_no = models.CharField(max_length=50)
     product_name = models.CharField(max_length=200)
     manufacturing_date = models.DateField()

@@ -1,12 +1,29 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}Delete Product{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-  <h2>Delete Product</h2>
-  <p>Are you sure you want to delete <b>{{ product.product_name }}</b>?</p>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Yes, Delete</button>
-    <a href="{% url 'view' %}" class="btn btn-secondary">Cancel</a>
-  </form>
+<div style="display: flex; justify-content: center; align-items: center; min-height: 70vh;">
+  <div style="width: 100%; max-width: 500px; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
+    
+    <h2 style="color: #dc3545; margin-bottom: 20px;">
+      ⚠ Are you sure you want to delete <br> <strong>{{ product.product_name }}</strong>?
+    </h2>
+
+    <form method="post" style="margin-bottom: 15px;">
+      {% csrf_token %}
+      <button type="submit" 
+              style="background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">
+        🗑 Yes, Delete
+      </button>
+    </form>
+
+    <a href="{% url 'product_list' %}" 
+       style="background: #6c757d; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none;">
+      ⬅ Cancel
+    </a>
+
+  </div>
 </div>
 {% endblock %}
