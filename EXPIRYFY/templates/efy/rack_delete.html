@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+/* -------------------- */
+/* Global Styling */
+/* -------------------- */
+body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #f0f4ff, #ffe6e6);
+    margin: 0;
+    padding: 0;
+}
+
+/* -------------------- */
+/* Outer Container */
+/* -------------------- */
+.delete-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    padding: 20px;
+}
+
+/* -------------------- */
+/* Card Container */
+/* -------------------- */
+.delete-card {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 550px;
+    text-align: center;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Title */
+.delete-card h2 {
+    color: #dc3545;
+    margin-bottom: 20px;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+/* Confirmation Text */
+.delete-card p {
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 25px;
+}
+
+/* -------------------- */
+/* Buttons */
+/* -------------------- */
+.delete-card button,
+.delete-card a {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Delete Button */
+.delete-card button {
+    background: #dc3545;
+    color: #fff;
+    border: none;
+}
+.delete-card button:hover {
+    background: #b02a37;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+}
+
+/* Cancel Button */
+.delete-card a {
+    background: #6c757d;
+    color: #fff;
+}
+.delete-card a:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+}
+
+/* -------------------- */
+/* Responsive */
+/* -------------------- */
+@media (max-width: 600px) {
+    .delete-card {
+        padding: 20px;
+    }
+    .delete-card h2 {
+        font-size: 24px;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+
+<div class="delete-wrapper">
+  <div class="delete-card">
+    <h2>Delete Rack</h2>
+    <p>Are you sure you want to delete <b>{{ rack.product_name }}</b> (Rack {{ rack.rack_no }})?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Yes, Delete</button>
+        <a href="{% url 'rack_view' %}">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
