@@ -1,82 +1,92 @@
 {% extends "base.html" %}
-{% load static %}
-
-{% block title %}Add Product{% endblock %}
 
 {% block content %}
-<center><div class="d-flex justify-content-center align-items-center" style="min-height: 80vh; background: #f8f9fa;">
-  <div class="card shadow-lg" style="width: 100%; max-width: 600px; border-radius: 15px;">
-    <div class="card-header text-center bg-success text-white" style="border-radius: 15px 15px 0 0;">
-      <h3 class="mb-0">➕ Add New Product</h3>
-    </div>
-    <div class="card-body" style="padding: 30px;">
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-
-        <div class="mb-3">
-          {{ form.rack_no.label_tag }}
-          {{ form.rack_no }}
-        </div>
-        <div class="mb-3">
-          {{ form.batch_no.label_tag }}
-          {{ form.batch_no }}
-        </div>
-        <div class="mb-3">
-          {{ form.product_name.label_tag }}
-          {{ form.product_name }}
-        </div>
-        <div class="mb-3">
-          {{ form.manufacturing_date.label_tag }}
-          {{ form.manufacturing_date }}
-        </div>
-        <div class="mb-3">
-          {{ form.expiry_date.label_tag }}
-          {{ form.expiry_date }}
-        </div>
-        <div class="mb-3">
-          {{ form.quantity.label_tag }}
-          {{ form.quantity }}
-        </div>
-        <div class="mb-3">
-          {{ form.price.label_tag }}
-          {{ form.price }}
-        </div>
-        <div class="mb-3">
-          {{ form.image.label_tag }}
-          {{ form.image }}
-        </div>
-
-        <div class="text-center mt-4">
-          <button type="submit" class="btn btn-success px-4 py-2" style="border-radius: 8px;">
-            ✅ Save Product
-          </button>
-          <a href="{% url 'product_list' %}" class="btn btn-secondary px-4 py-2" style="border-radius: 8px; margin-left: 10px;">
-            ⬅ Cancel
-          </a>
-        </div>
-      </form>
-    </div>
-  </div>
-</div></center>
-
-<!-- Extra Inline Styling for Form Fields -->
 <style>
-  form input, form select, form textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ced4da;
-    transition: 0.3s;
-  }
-  form input:focus, form select:focus, form textarea:focus {
-    border-color: #198754;
-    box-shadow: 0 0 5px rgba(25, 135, 84, 0.3);
-    outline: none;
-  }
-  label {
+/* Container & Card */
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Form Header */
+.container h2 {
+    text-align: center;
+    color: #198754;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+/* Form Fields */
+form p {
+    margin-bottom: 18px;
+}
+
+form label {
+    display: block;
     font-weight: 500;
     margin-bottom: 6px;
     color: #333;
-  }
+}
+
+form input, form select, form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+form input:focus, form select:focus, form textarea:focus {
+    border-color: #198754;
+    box-shadow: 0 0 5px rgba(25, 135, 84, 0.3);
+    outline: none;
+}
+
+/* Submit Button */
+button.btn-success {
+    background-color: #198754;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button.btn-success:hover {
+    background-color: #146c43;
+}
+
+/* Optional: Error messages */
+ul.errorlist {
+    color: #dc3545;
+    margin-bottom: 10px;
+    list-style-type: disc;
+    padding-left: 20px;
+}
 </style>
+
+
+<div class="container mt-4">
+
+  <h2>Add Product</h2>
+
+  <form method="post" enctype="multipart/form-data">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-success">Add Product</button>
+
+  </form>
+
+</div>
+
 {% endblock %}
