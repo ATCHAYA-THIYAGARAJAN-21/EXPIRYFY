@@ -14,6 +14,12 @@ urlpatterns = [
     path('rack/update/<int:pk>/', views.rack_update, name='rack_update'),
     path('rack/delete/<int:pk>/', views.rack_delete, name='rack_delete'),
     path('rack/view/', views.rack_view, name='rack_view'),
+
+     path("billing/", views.billing_page, name="billing"),
+    path("get-product/", views.get_product_by_batch, name="get_product"),
+    path("checkout/", views.checkout, name="checkout"),
+
+    
 ]
 
 

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Cart Preview -->
+        <div class="col-md-7">
+            <div class="card shadow p-4">
+                <h3 class="mb-3 text-success">🛒 Your Cart</h3>
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product</th>
+                            <th>Image</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="checkoutCart"></tbody>
+                </table>
+                <h4 class="text-end mt-3">Grand Total: ₹<span id="grandTotal">0.00</span></h4>
+            </div>
+        </div>
+
+        <!-- Checkout Button -->
+        <div class="col-md-5">
+            <div class="card shadow p-4 text-center">
+                <h3 class="text-primary mb-4">Confirm Order</h3>
+                <button onclick="checkoutCart()" class="btn btn-success w-100 py-2">
+                    ✅ Checkout & Update Stock
+                </button>
+                <p class="text-muted mt-3">Stock will be updated automatically.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load cart from localStorage
+function renderCheckoutCart() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let tbody = document.getElementById("checkoutCart");
+    let total = 0;
+    tbody.innerHTML = "";
+
+    cart.forEach(item => {
+        let row = `
+            <tr>
+                <td>${item.name}</td>
+                <td><img src="${item.image}" width="60" height="60"></td>
+                <td>${item.qty}</td>
+                <td>₹${item.price}</td>
+                <td>₹${(item.qty * item.price).toFixed(2)}</td>
+            </tr>
+        `;
+        tbody.innerHTML += row;
+        total += item.qty * item.price;
+    });
+
+    document.getElementById("grandTotal").innerText = total.toFixed(2);
+}
+renderCheckoutCart();
+
+// Checkout function (AJAX POST)
+function checkoutCart() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    if (cart.length === 0) {
+        alert("🛑 Cart is empty!");
+        return;
+    }
+
+    fetch("/checkout/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken")  // Django CSRF token
+        },
+        body: JSON.stringify(cart)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            localStorage.removeItem("cart");
+            window.location.href = "/"; // redirect after checkout
+        } else {
+            console.log(data.errors);
+            alert("⚠️ Some items failed: " + JSON.stringify(data.errors));
+        }
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        alert("Something went wrong!");
+    });
+}
+
+// CSRF helper
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

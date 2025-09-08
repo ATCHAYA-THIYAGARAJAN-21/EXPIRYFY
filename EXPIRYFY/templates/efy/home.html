@@ -5,81 +5,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Exprify Dashboard</title>
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f5f6fa;
-    }
-    /* Sidebar */
-    .sidebar {
-      height: 100vh;
-      background: #111827;
-      color: #fff;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 250px;
-      padding-top: 10px;
-      transition: all 0.3s;
-    }
-    .sidebar .logo {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .sidebar .logo img {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-    }
-    .sidebar h3 {
-      font-size: 20px;
-      margin-top: 10px;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-    .sidebar a {
-      display: flex;
-      align-items: center;
-      padding: 12px 20px;
-      color: #cbd5e1;
-      text-decoration: none;
-      transition: background 0.3s;
-      font-size: 15px;
-    }
-    .sidebar a i {
-      font-size: 18px;
-      margin-right: 12px;
-    }
-    .sidebar a:hover {
-      background: #1e293b;
-      color: #fff;
-    }
-    .sidebar .active {
-      background: #2563eb;
-      color: #fff;
-    }
-
-    /* Content */
-    .content {
-      margin-left: 250px;
-      padding: 20px;
-    }
-
-
-
-    /* Cards */
-    .card {
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0px 2px 10px rgba(0,0,0,0.05);
-    }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f6fa; }
+    .sidebar { height: 100vh; background: #111827; color: #fff; position: fixed; top: 0; left: 0; width: 250px; padding-top: 10px; }
+    .sidebar .logo { text-align: center; margin-bottom: 20px; }
+    .sidebar .logo img { width: 130px; height: 130px; border-radius: 50%; }
+    .sidebar h3 { font-size: 20px; margin-top: 10px; font-weight: bold; letter-spacing: 1px; }
+    .sidebar a { display: flex; align-items: center; padding: 12px 20px; color: #cbd5e1; text-decoration: none; font-size: 15px; }
+    .sidebar a i { font-size: 18px; margin-right: 12px; }
+    .sidebar a:hover { background: #1e293b; color: #fff; }
+    .sidebar .active { background: #2563eb; color: #fff; }
+    .content { margin-left: 250px; padding: 20px; }
+    .card { border: none; border-radius: 12px; box-shadow: 0px 2px 10px rgba(0,0,0,0.05); }
   </style>
 </head>
 <body>
@@ -90,24 +31,16 @@
       <img src="{% static 'image/logo.png' %}" alt="Logo">
       <h3>EXPIRYFY</h3>
     </div>
-    <a href="#" class="active"><i class="bi bi-speedometer2 text-primary"></i> Dashboard</a>
+    <a href="{% url 'dashboard' %}" class="active"><i class="bi bi-speedometer2 text-primary"></i> Dashboard</a>
     <a href="{% url 'add_product' %}"><i class="bi bi-plus-circle-fill text-success"></i> Product Add</a>
-
-     <a href="{% url 'product_list' %}"><i class="bi bi-arrow-repeat text-warning"></i> Product list</a>
+    <a href="{% url 'product_list' %}"><i class="bi bi-arrow-repeat text-warning"></i> Product list</a>
     <a href="{% url 'view_by_rack' %}"><i class="bi bi-eye-fill text-info"></i> Product View</a>
-    <a href="#"><i class="bi bi-receipt-cutoff text-purple"></i> Customer Bill Entry</a>
-
+    <a href="{% url 'billing' %}"><i class="bi bi-receipt-cutoff text-purple"></i> Customer Bill Entry</a>
     <a href="{% url 'rack_add' %}"><i class="bi bi-grid-fill text-success"></i> Rack Add</a>
-    {% for product in products %}
-    <a href="{% url 'rack_update' Rack.id %}"><i class="bi bi-arrow-repeat text-warning"></i> Rack Update</a>
-    <a href="{% url 'rack_delete' Rack.id %}"><i class="bi bi-x-circle-fill text-danger"></i> Rack Delete</a>
-    {% endfor %}
     <a href="{% url 'rack_view' %}"><i class="bi bi-eye text-info"></i> Rack View</a>
     <a href="#"><i class="bi bi-bell-fill text-danger"></i> Alert Message</a>
     <a href="#"><i class="bi bi-hourglass-split text-primary"></i> Expiry View</a>
   </div>
-
-
 
   <!-- Main Content -->
   <div class="content">
@@ -117,81 +50,70 @@
         <div class="card p-3 text-center">
           <i class="bi bi-people-fill fs-1 text-primary"></i>
           <h5 class="mt-2">Users</h5>
-          <h3>1,245</h3>
+          <h3>{{ total_users }}</h3>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card p-3 text-center">
           <i class="bi bi-cart-check-fill fs-1 text-success"></i>
-          <h5 class="mt-2">Orders</h5>
-          <h3>875</h3>
+          <h5 class="mt-2">Products</h5>
+          <h3>{{ total_products }}</h3>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card p-3 text-center">
           <i class="bi bi-cash-stack fs-1 text-warning"></i>
-          <h5 class="mt-2">Revenue</h5>
-          <h3>$54K</h3>
+          <h5 class="mt-2">Employees</h5>
+          <h3>{{ total_employees }}</h3>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card p-3 text-center">
           <i class="bi bi-graph-up-arrow fs-1 text-danger"></i>
-          <h5 class="mt-2">Growth</h5>
-          <h3>+23%</h3>
+          <h5 class="mt-2">Racks</h5>
+          <h3>{{ total_racks }}</h3>
         </div>
       </div>
     </div>
 
-    
-    <!-- Table -->
+    <!-- Rack Table -->
     <div class="row mt-4">
       <div class="col-md-12">
         <div class="card p-3">
-          <h5>Recent Orders</h5>
+          <h5>All Racks</h5>
           <table class="table table-hover align-middle">
             <thead class="table-light">
               <tr>
-                <th>#</th>
-                <th>User</th>
-                <th>Product</th>
-                <th>Status</th>
-                <th>Amount</th>
+                <th>Rack No</th>
+                <th>Product Name</th>
+                <th>Image</th>
               </tr>
             </thead>
             <tbody>
+              {% for rack in racks %}
               <tr>
-                <td>1024</td>
-                <td>John Doe</td>
-                <td>Smartphone</td>
-                <td><span class="badge bg-success">Completed</span></td>
-                <td>$500</td>
+                <td>{{ rack.rack_no }}</td>
+                <td>{{ rack.product_name }}</td>
+                <td>
+                  {% if rack.product_image %}
+                    <img src="{{ rack.product_image.url }}" alt="{{ rack.product_name }}" width="70" height="70">
+                  {% else %}
+                    <span class="text-muted">No Image</span>
+                  {% endif %}
+                </td>
               </tr>
+              {% empty %}
               <tr>
-                <td>1025</td>
-                <td>Jane Smith</td>
-                <td>Laptop</td>
-                <td><span class="badge bg-warning">Pending</span></td>
-                <td>$1200</td>
+                <td colspan="3" class="text-center">No racks found</td>
               </tr>
-              <tr>
-                <td>1026</td>
-                <td>Michael Lee</td>
-                <td>Headphones</td>
-                <td><span class="badge bg-danger">Cancelled</span></td>
-                <td>$150</td>
-              </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-
 </body>
 </html>

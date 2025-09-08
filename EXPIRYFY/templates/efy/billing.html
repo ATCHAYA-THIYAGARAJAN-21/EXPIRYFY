@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+.container { max-width: 1000px; margin: 40px auto; }
+input, button { padding: 8px; margin: 5px; }
+.cart-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+.cart-table th, .cart-table td { border: 1px solid #ccc; padding: 10px; text-align: center; vertical-align: middle; }
+.cart-table img { border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+.qty-btn { padding: 4px 10px; margin: 0 4px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+.qty-btn:hover { background: #218838; }
+.remove-btn { background: #dc3545; color: #fff; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; }
+.remove-btn:hover { background: #c82333; }
+.checkout-btn { width: 100%; margin-top: 20px; padding: 12px; font-size: 18px; font-weight: bold; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; }
+.checkout-btn:disabled { background: #aaa; cursor: not-allowed; }
+</style>
+
+<div class="container">
+  <h2>🧾 Customer Billing</h2>
+
+  <!-- Search Product -->
+  <div>
+    <input type="text" id="batchInput" placeholder="Enter Batch No">
+    <button onclick="fetchProduct()">➕ Add Product</button>
+  </div>
+
+  <!-- Cart Table -->
+  <table class="cart-table">
+    <thead>
+      <tr>
+        <th>Rack No</th>
+        <th>Batch No</th>
+        <th>Product</th>
+        <th>Image</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Total</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="cartBody"></tbody>
+  </table>
+
+  <h3 class="text-end mt-3">Grand Total: ₹ <span id="grandTotal">0</span></h3>
+  <button id="checkoutBtn" class="checkout-btn" onclick="checkout()" disabled>✅ Checkout</button>
+</div>
+
+<script>
+let cart = [];
+
+function fetchProduct() {
+    let batchNo = document.getElementById("batchInput").value.trim();
+    if (!batchNo) return;
+
+    fetch(`/EXPIRYFY/get-product/?batch_no=${batchNo}`)
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            let product = data.product;
+
+            let existing = cart.find(p => p.id === product.id);
+            if (existing) {
+                if (existing.qty < product.stock) {
+                    existing.qty++;
+                } else {
+                    alert("⚠️ Stock limit reached!");
+                }
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            renderCart();
+            document.getElementById("batchInput").value = ""; // clear input
+        } else {
+            alert(data.error);
+        }
+    })
+    .catch(err => alert("⚠️ Error fetching product"));
+}
+
+function renderCart() {
+    let tbody = document.getElementById("cartBody");
+    tbody.innerHTML = "";
+    let grandTotal = 0;
+
+    cart.forEach((item, index) => {
+        let row = `
+        <tr>
+            <td>${item.rack_no}</td>
+            <td>${item.batch_no}</td>
+            <td>${item.name}</td>
+            <td><img src="${item.image}" alt="${item.name}" width="70" height="70"></td>
+            <td>₹${item.price}</td>
+            <td>
+              <button class="qty-btn" onclick="decreaseQty(${index})">-</button>
+              ${item.qty}
+              <button class="qty-btn" onclick="increaseQty(${index})">+</button>
+              <br><small class="text-muted">Stock: ${item.stock}</small>
+            </td>
+            <td>₹${(item.price * item.qty).toFixed(2)}</td>
+            <td><button class="remove-btn" onclick="removeItem(${index})">❌ Remove</button></td>
+        </tr>`;
+        tbody.innerHTML += row;
+        grandTotal += item.price * item.qty;
+    });
+
+    document.getElementById("grandTotal").innerText = grandTotal.toFixed(2);
+    document.getElementById("checkoutBtn").disabled = cart.length === 0;
+}
+
+function increaseQty(index) {
+    if (cart[index].qty < cart[index].stock) {
+        cart[index].qty++;
+        renderCart();
+    } else {
+        alert("⚠️ Stock limit reached!");
+    }
+}
+
+function decreaseQty(index) {
+    if (cart[index].qty > 1) {
+        cart[index].qty--;
+    } else {
+        removeItem(index);
+    }
+    renderCart();
+}
+
+function removeItem(index) {
+    cart.splice(index, 1);
+    renderCart();
+}
+
+function checkout() {
+    if (cart.length === 0) return;
+
+    fetch("/EXPIRYFY/checkout/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-CSRFToken": getCookie("csrftoken") },
+        body: JSON.stringify(cart)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            cart = [];
+            renderCart();
+        } else {
+            alert("❌ Checkout failed!\n" + (data.message || ""));
+        }
+    })
+    .catch(err => alert("⚠️ Checkout error"));
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        let cookies = document.cookie.split(";");
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}
