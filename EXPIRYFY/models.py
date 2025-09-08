@@ -3,7 +3,7 @@ from django.db import models
 from django.db import models
 
 class Product(models.Model):
-    rack_no = models.CharField(max_length=50, unique=True)
+    rack_no = models.CharField(max_length=50)
     batch_no = models.CharField(max_length=50)
     product_name = models.CharField(max_length=200)
     manufacturing_date = models.DateField()
@@ -14,4 +14,16 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.product_name} - {self.rack_no}"
+    
+
+    from django.db import models
+
+class Rack(models.Model):
+    rack_no = models.CharField(max_length=50, unique=True)
+    product_name = models.CharField(max_length=100)
+    product_image = models.ImageField(upload_to="rack_images/", blank=True, null=True)
+
+    def __str__(self):
+        return f"Rack {self.rack_no} - {self.product_name}"
+
 

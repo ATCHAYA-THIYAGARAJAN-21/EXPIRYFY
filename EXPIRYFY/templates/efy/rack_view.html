@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Rack List</h2>
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Rack No</th>
+        <th>Product Name</th>
+        <th>Image</th>
+        <th>Actions</th>
+    </tr>
+    {% for rack in racks %}
+    <tr>
+        <td>{{ rack.rack_no }}</td>
+        <td>{{ rack.product_name }}</td>
+        <td>
+            {% if rack.product_image %}
+                <img src="{{ rack.product_image.url }}" width="100">
+            {% else %}
+                No Image
+            {% endif %}
+        </td>
+        <td>
+            <a href="{% url 'rack_update' rack.pk %}">Update</a> | 
+            <a href="{% url 'rack_delete' rack.pk %}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<br>
+<a href="{% url 'rack_add' %}">➕ Add New Rack</a>
+{% endblock %}

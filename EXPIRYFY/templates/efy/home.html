@@ -92,17 +92,17 @@
     </div>
     <a href="#" class="active"><i class="bi bi-speedometer2 text-primary"></i> Dashboard</a>
     <a href="{% url 'add_product' %}"><i class="bi bi-plus-circle-fill text-success"></i> Product Add</a>
-    {% for product in products %}
-    <a href="{% url 'update_product' product.id %}"><i class="bi bi-pencil-square text-warning"></i> Product Update</a>
-    <a href="{% url 'delete_product' product.id %}"><i class="bi bi-trash-fill text-danger"></i> Product Update</a>
-    {% endfor %}
-     <a href="{% url 'product_list' %}"><i class="bi bi-eye-fill text-info"></i> Product list</a>
+
+     <a href="{% url 'product_list' %}"><i class="bi bi-arrow-repeat text-warning"></i> Product list</a>
     <a href="{% url 'view_by_rack' %}"><i class="bi bi-eye-fill text-info"></i> Product View</a>
     <a href="#"><i class="bi bi-receipt-cutoff text-purple"></i> Customer Bill Entry</a>
-    <a href="#"><i class="bi bi-grid-fill text-success"></i> Rack Add</a>
-    <a href="#"><i class="bi bi-arrow-repeat text-warning"></i> Rack Update</a>
-    <a href="#"><i class="bi bi-x-circle-fill text-danger"></i> Rack Delete</a>
-    <a href="#"><i class="bi bi-eye text-info"></i> Rack View</a>
+
+    <a href="{% url 'rack_add' %}"><i class="bi bi-grid-fill text-success"></i> Rack Add</a>
+    {% for product in products %}
+    <a href="{% url 'rack_update' Rack.id %}"><i class="bi bi-arrow-repeat text-warning"></i> Rack Update</a>
+    <a href="{% url 'rack_delete' Rack.id %}"><i class="bi bi-x-circle-fill text-danger"></i> Rack Delete</a>
+    {% endfor %}
+    <a href="{% url 'rack_view' %}"><i class="bi bi-eye text-info"></i> Rack View</a>
     <a href="#"><i class="bi bi-bell-fill text-danger"></i> Alert Message</a>
     <a href="#"><i class="bi bi-hourglass-split text-primary"></i> Expiry View</a>
   </div>

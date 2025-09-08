@@ -63,3 +63,46 @@ def view_by_rack(request):
             messages.error(request, "No product found for this rack number.")
     return render(request, "efy/view_by_rack.html", {"product": product})
 
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Rack
+from .forms import RackForm
+
+# Add Rack
+def rack_add(request):
+    if request.method == 'POST':
+        form = RackForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('rack_view')
+    else:
+        form = RackForm()
+    return render(request, 'efy/rack_add.html', {'form': form})
+
+# Update Rack
+def rack_update(request, pk):
+    rack = get_object_or_404(Rack, pk=pk)
+    if request.method == 'POST':
+        form = RackForm(request.POST, request.FILES, instance=rack)
+        if form.is_valid():
+            form.save()
+            return redirect('rack_view')
+    else:
+        form = RackForm(instance=rack)
+    return render(request, 'efy/rack_update.html', {'form': form})
+
+# Delete Rack
+def rack_delete(request, pk):
+    rack = get_object_or_404(Rack, pk=pk)
+    if request.method == 'POST':
+        rack.delete()
+        return redirect('rack_view')
+    return render(request, 'efy/rack_delete.html', {'rack': rack})
+
+# View Rack
+def rack_view(request):
+    racks = Rack.objects.all()
+    return render(request, 'efy/rack_view.html', {'racks': racks})
+
+
