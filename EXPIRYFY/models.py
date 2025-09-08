@@ -3,7 +3,7 @@ from django.db import models
 from django.db import models
 
 class Product(models.Model):
-    rack_no = models.CharField(max_length=50, unique=True)
+    rack_no = models.CharField(max_length=50)
     batch_no = models.CharField(max_length=50)
     product_name = models.CharField(max_length=200)
     manufacturing_date = models.DateField()
