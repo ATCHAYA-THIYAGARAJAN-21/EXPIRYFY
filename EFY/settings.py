@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'EXPIRYFY',
+    'EXPIRYFY.apps.EXPIRYFYConfig',
 ]
 
 MIDDLEWARE = [
@@ -71,6 +71,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'EFY.wsgi.application'
 
 
+
+
+CRONJOBS = [
+    ('0 9 * * *', 'expirify.crons.check_expiry_job'),  # runs daily at 9 AM
+]
+
+
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -84,6 +91,17 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# settings.py
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "digitalalchemists00@gmail.com"
+EMAIL_HOST_PASSWORD = "wrrn psnl emjg bvae"  # <-- Gmail App Password (NOT normal password)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
