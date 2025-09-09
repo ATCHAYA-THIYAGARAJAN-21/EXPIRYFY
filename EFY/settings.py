@@ -86,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'expiryfy',
         'USER': 'postgres',
-        'PASSWORD': 'Kavi100@',
+        'PASSWORD': 'Atchu21@',
         'HOST': 'localhost',
         'PORT': '5432',
     }
