@@ -23,5 +23,5 @@ def check_expiry_job():
 
 def start():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(check_expiry_job, 'cron', hour=9, minute=30)  # every day 9 AM
+    scheduler.add_job(check_expiry_job, 'cron', hour=16, minute=40)  # every day 9 AM
     scheduler.start()
